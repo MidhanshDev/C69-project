@@ -1,13 +1,7 @@
 import { BarCodeScanner } from "expo-barcode-scanner";
 import React from "react";
-import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-  Image,
-} from "react-native";
-
+import { StyleSheet, Text, TouchableOpacity, View, Image } from "react-native";
+import * as Permissions from "expo-permissions";
 export default class ScanScreen extends React.Component {
   constructor() {
     super();
@@ -19,11 +13,11 @@ export default class ScanScreen extends React.Component {
     };
   }
 
-  getCameraPermissions = async (id) => {
+  getCameraPermissions = async () => {
     const { status } = await Permissions.askAsync(Permissions.CAMERA);
     this.setState({
       hasCameraPermissions: status === "granted",
-      buttonState: id,
+      buttonState: "clicked",
       scanned: false,
     });
   };
@@ -43,19 +37,19 @@ export default class ScanScreen extends React.Component {
     if (buttonState === "clicked" && hasCameraPermissions) {
       return (
         <BarCodeScanner
-          onBarCodeScanned={scanned ? undefined : this.handlerBarCodeScanned}
+          onBarCodeScanned={scanned ? undefined : this.handleBarCodeScanned}
           style={StyleSheet.absoluteFillObject}
         />
       );
     } else if (buttonState === "normal") {
       return (
         <View style={styles.container}>
-         <View>
-           <Image
-           source={require("../assets/220px-Barcode-scanner.jpg")}
-           style={{ width: 200, height:200}}
-           />
-         </View>
+          <View>
+            <Image
+              source={require("../assets/220px-Barcode-scanner.jpg")}
+              style={{ width: 200, height: 200 }}
+            />
+          </View>
 
           <Text style={styles.displayText}>
             {hasCameraPermissions === true
@@ -64,9 +58,9 @@ export default class ScanScreen extends React.Component {
           </Text>
 
           <TouchableOpacity
-            onPress = {this.getCameraPermissions}
-            style = {styles.scanButton}
-            title = "Bar Code Scanner"
+            onPress={this.getCameraPermissions}
+            style={styles.scanButton}
+            title="Bar Code Scanner"
           >
             <Text style={styles.buttonText}>Scan QR Code</Text>
           </TouchableOpacity>
